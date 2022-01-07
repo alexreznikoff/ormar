@@ -243,6 +243,9 @@ def populate_meta_tablename_columns_and_pk(
     new_model.Meta.tablename = (
         new_model.Meta.tablename if hasattr(new_model.Meta, "tablename") else tablename
     )
+    new_model.Meta.schema = (
+        new_model.Meta.schema if hasattr(new_model.Meta, "schema") else None
+    )
     pkname: Optional[str]
 
     if hasattr(new_model.Meta, "columns"):
@@ -292,8 +295,7 @@ def populate_meta_sqlalchemy_table_if_required(meta: "ModelMeta") -> None:
         set_constraint_names(meta=meta)
         args = (meta.tablename, meta.metadata, *meta.columns, *meta.constraints)
         kwargs = {}
-        schema = getattr(meta, "schema", None)
-        if schema:
+        if meta.schema:
             kwargs["schema"] = meta.schema
         table = sqlalchemy.Table(*args, **kwargs)
         meta.table = table
