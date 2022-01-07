@@ -290,9 +290,12 @@ def populate_meta_sqlalchemy_table_if_required(meta: "ModelMeta") -> None:
         meta
     ):
         set_constraint_names(meta=meta)
-        table = sqlalchemy.Table(
-            meta.tablename, meta.metadata, *meta.columns, *meta.constraints
-        )
+        args = (meta.tablename, meta.metadata, *meta.columns, *meta.constraints)
+        kwargs = {}
+        schema = getattr(meta, "schema", None)
+        if schema:
+            kwargs["schema"] = meta.schema
+        table = sqlalchemy.Table(*args, **kwargs)
         meta.table = table
 
 

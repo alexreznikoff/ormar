@@ -194,8 +194,15 @@ class FilterAction(QueryAction):
         )
         alias = f"{self.table_prefix}_" if self.table_prefix else ""
         aliased_name = f"{alias}{self.table.name}.{self.column.name}"
-        clause_text = clause_text.replace(
-            f"{self.table.name}.{self.column.name}", aliased_name
+        clause_text = (
+            clause_text.replace(
+                f"{self.table.schema}.{self.table.name}.{self.column.name}",
+                aliased_name,
+            )
+            if self.table.schema
+            else clause_text.replace(
+                f"{self.table.name}.{self.column.name}", aliased_name
+            )
         )
         dialect_name = self.target_model.Meta.database._backend._dialect.name
         if dialect_name != "sqlite":  # pragma: no cover

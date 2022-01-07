@@ -70,6 +70,7 @@ class ModelMeta:
     """
 
     tablename: str
+    schema: Optional[str]
     table: sqlalchemy.Table
     metadata: sqlalchemy.MetaData
     database: databases.Database

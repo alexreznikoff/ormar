@@ -112,6 +112,9 @@ def populate_fk_params_based_on_to_model(
     :rtype: Tuple[Any, List, Any]
     """
     fk_string = to.Meta.tablename + "." + to.get_column_alias(to.Meta.pkname)
+    schema = getattr(to.Meta, "schema", None)
+    if schema is not None:
+        fk_string = schema + "." + fk_string
     to_field = to.Meta.model_fields[to.Meta.pkname]
     pk_only_model = create_dummy_model(to, to_field)
     __type__ = (
